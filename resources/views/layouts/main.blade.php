@@ -255,14 +255,42 @@
                     <div class="col-md-4 mb-5">
                         <h5 class="text-secondary text-uppercase mb-4">Newsletter</h5>
                         <p>Duo stet tempor ipsum sit amet magna ipsum tempor est</p>
-                        <form action="">
+                        @php
+                            if (Auth::user()) {
+                                $user = Auth::user()->is_subscribed;
+                            } else {
+                                $user = null;
+                            }
+                        @endphp
+                        @if ($message = Session::get('newsLetter'))
+                            <div class="alert alert-success alert-block">
+                                <button type="button" class="close" data-dismiss="alert">×</button>
+                                <strong>{{ $message }}</strong>
+                            </div>
+                        @endif
+                        @if (!$user)
+                            <form action="{{ url('/') }}" method="POST">
+                                @csrf
+                                <div class="input-group">
+                                    <input type="text" class="form-control" name="is_subscribed"
+                                        placeholder="Your Email Address" />
+                                    <div class="input-group-append">
+                                        <button class="btn btn-primary" type="submit">Sign Up</button>
+                                    </div>
+                                </div>
+                            </form>
+                        @elseif($user)
+                            <div class="alert alert-success alert-block">you've already subscriped</div>
+                        @else
                             <div class="input-group">
-                                <input type="text" class="form-control" placeholder="Your Email Address" />
+                                <input type="text" class="form-control" name="is_subscribed"
+                                    placeholder="Your Email Address" />
                                 <div class="input-group-append">
-                                    <button class="btn btn-primary">Sign Up</button>
+                                    <a class="btn btn-primary" href="{{ url('login') }}" type="submit">Sign
+                                        Up</a>
                                 </div>
                             </div>
-                        </form>
+                        @endif
                         <h6 class="text-secondary text-uppercase mt-4 mb-3">Follow Us</h6>
                         <div class="d-flex">
                             <a class="btn btn-primary btn-square mr-2" href="#"><i

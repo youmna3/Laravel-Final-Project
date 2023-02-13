@@ -119,9 +119,23 @@ class HomeController extends Controller
             $order_detail->save();
         }
         Session::forget('ids');
-        return Redirect::back()->with('success', 'Thank you for you Order, Order Number:4523sd45f');
+        return Redirect::back()->with('success', 'Thank you for your Order, Order Number:4523sd45f');
 
 
+    }
+    function newsLetter(Request $request)
+    {
+        if (Auth::user()) {
+            $id = auth()->user()->id;
+            $user = User::findOrFail($id);
+            $user->is_subscribed = isset($request['is_subscribed']) ? 1 : 0;
+
+            $user->save();
+
+            return Redirect::back()->with('newsLetter', 'Thank you for your subscription');
+        } else {
+            return view('auth.login');
+        }
     }
 
 
